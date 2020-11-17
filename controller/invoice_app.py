@@ -21,10 +21,20 @@ class InvoiceApp(tk.Frame):
         self.calendar_view.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
     def hover_in(self, event):
-        pass
+        # Changes background color of calendar block to
+        # notify users they are pointing to calendar block
+
+        event.widget["bg"] = "#D7DBDD"
+        event.widget.date_lbl["bg"] = "#D7DBDD"
+        event.widget.time_lbl["bg"] = "#D7DBDD"
 
     def hover_out(self, event):
-        pass
+        # Reverts background color of calendar block to
+        # notify users they are no longer pointing to calendar block
+
+        event.widget["bg"] = "white"
+        event.widget.date_lbl["bg"] = "white"
+        event.widget.time_lbl["bg"] = "white"
 
     def prev_month(self, event):
         pass
