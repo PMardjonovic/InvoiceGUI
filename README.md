@@ -1,0 +1,1 @@
+Simple GUI intended to help users generate invoices for their personal needs.
