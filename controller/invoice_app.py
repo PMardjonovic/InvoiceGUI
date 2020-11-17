@@ -80,7 +80,25 @@ class InvoiceApp(tk.Frame):
         pass
 
     def enter_entries_view(self, event):
-        pass
+        # Create entries view
+        self.entries_view = EntriesView(self, self)
+
+        # Destroy current calendar view
+        self.calendar_view.destroy()
+        self.calendar_view = None
+
+        # Display entries view
+        self.entries_view.pack(
+            side=tk.TOP, fill=tk.BOTH, expand=True)
 
     def return_to_calendar(self, event):
-        pass
+        # Create calendar view
+        self.calendar_view = CalendarView(
+            self, self, self.today, self.month, self.year)
+
+        # Destroy current entries view
+        self.entries_view.destroy()
+        self.entries_view = None
+
+        # Display calendar view
+        self.calendar_view.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
