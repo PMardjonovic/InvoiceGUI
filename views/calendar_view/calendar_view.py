@@ -1,5 +1,4 @@
 import tkinter as tk
-import calendar as cl
 
 from views.calendar_view.calendar_menu import CalendarMenu
 from views.calendar_view.calendar_section import CalendarSection
@@ -15,10 +14,6 @@ class CalendarView(tk.Frame):
         # Today's date
         self.today = today
 
-        # Curent month/ year being displayed
-        self.month = month
-        self.year = year
-
         # Left Menu
         self.calendar_menu = CalendarMenu(self, controller)
         self.calendar_menu.pack(side=tk.LEFT, fill=tk.BOTH)
@@ -26,7 +21,7 @@ class CalendarView(tk.Frame):
         # Main header that displays current month/year
         # Provides prev/next buttons to navigate calendar
         self.main_header = MainHeader(
-            self, controller, cl.month_name[self.month], self.year)
+            self, controller, month, year)
         self.main_header.pack(side=tk.TOP, fill=tk.BOTH)
 
         # Secondary header displays the days of the week
@@ -35,5 +30,5 @@ class CalendarView(tk.Frame):
 
         # Displays interactive days of the current month & year
         self.calendar_section = CalendarSection(
-            self, controller, self.month, self.year)
+            self, controller, month, year)
         self.calendar_section.pack(side=tk.TOP, fill=tk.BOTH, expand=True)

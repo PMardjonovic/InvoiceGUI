@@ -4,6 +4,7 @@ import calendar as cl
 
 from views.calendar_view.calendar_view import CalendarView
 from views.calendar_view.calendar_section import CalendarSection
+from views.entries_view.entries_view import EntriesView
 
 
 class InvoiceApp(tk.Frame):
@@ -14,11 +15,15 @@ class InvoiceApp(tk.Frame):
         # Today's date
         self.today = datetime.today()
 
-        self.calendar_view = CalendarView(
-            self, self, self.today, self.today.month, self.today.year)
+        self.month = self.today.month
+        self.year = self.today.year
 
         # CalendarView displaying todays date
+        self.calendar_view = CalendarView(
+            self, self, self.today, self.today.month, self.today.year)
         self.calendar_view.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+
+        self.entries_view = None
 
     def hover_in(self, event):
         # Changes background color of calendar block to
@@ -37,58 +42,63 @@ class InvoiceApp(tk.Frame):
         event.widget.time_lbl["bg"] = "white"
 
     def prev_month(self, event):
-        month = self.calendar_view.month - 1
-        year = self.calendar_view.year
+        self.month = self.month - 1
 
-        if month < 1:
-            month = 12
-            year = year - 1
+        if self.month < 1:
+            self.month = 12
+            self.year = self.year - 1
 
-        # Update calendar header
-        self.calendar_view.main_header.header_lbl["text"] = f"{cl.month_name[month]}, {year}"
+        # Build updated calendar view
+        new_cal_view = CalendarView(
+            self, self, self.today, self.month, self.year)
 
-        # Build new calendar section
-        new_cal_section = CalendarSection(
-            self.calendar_view, self, month, year)
+        self.calendar_view.destroy()
 
-        # Destroy old calendar section
-        self.calendar_view.calendar_section.destroy()
-
-        # Pack in new calendar section
-        self.calendar_view.calendar_section = new_cal_section
-        self.calendar_view.calendar_section.pack(
-            side=tk.TOP, fill=tk.BOTH, expand=True)
-
-        # Update month and year for CalendarView
-        self.calendar_view.month = month
-        self.calendar_view.year = year
+        self.calendar_view = new_cal_view
+        self.calendar_view.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
     def next_month(self, event):
-        month = self.calendar_view.month + 1
-        year = self.calendar_view.year
+        self.month = self.month + 1
 
-        if month > 12:
-            month = 1
-            year = year + 1
+        if self.month > 12:
+            self.month = 1
+            self.year = self.year + 1
 
-        # Update calendar header
-        self.calendar_view.main_header.header_lbl["text"] = f"{cl.month_name[month]}, {year}"
+        # Build updated calendar section
+        new_cal_view = CalendarView(
+            self, self, self.today, self.month, self.year)
 
-        # Build new calendar section
-        new_cal_section = CalendarSection(
-            self.calendar_view, self, month, year)
+        self.calendar_view.destroy()
 
-        # Destroy old calendar section
-        self.calendar_view.calendar_section.destroy()
+        self.calendar_view = new_cal_view
+        self.calendar_view.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
-        # Pack in new calendar section
-        self.calendar_view.calendar_section = new_cal_section
-        self.calendar_view.calendar_section.pack(
-            side=tk.TOP, fill=tk.BOTH, expand=True)
+    def new_entry(self, event):
+        pass
 
-        # Update month and year for CalendarView
-        self.calendar_view.month = month
-        self.calendar_view.year = year
+    def delete_entry(self, event):
+        pass
 
     def enter_entries_view(self, event):
-        pass
+        # Create entries view
+        self.entries_view = EntriesView(self, self)
+
+        # Destroy current calendar view
+        self.calendar_view.destroy()
+        self.calendar_view = None
+
+        # Display entries view
+        self.entries_view.pack(
+            side=tk.TOP, fill=tk.BOTH, expand=True)
+
+    def return_to_calendar(self, event):
+        # Create calendar view
+        self.calendar_view = CalendarView(
+            self, self, self.today, self.month, self.year)
+
+        # Destroy current entries view
+        self.entries_view.destroy()
+        self.entries_view = None
+
+        # Display calendar view
+        self.calendar_view.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
