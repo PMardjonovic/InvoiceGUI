@@ -37,10 +37,58 @@ class InvoiceApp(tk.Frame):
         event.widget.time_lbl["bg"] = "white"
 
     def prev_month(self, event):
-        pass
+        month = self.calendar_view.month - 1
+        year = self.calendar_view.year
+
+        if month < 1:
+            month = 12
+            year = year - 1
+
+        # Update calendar header
+        self.calendar_view.main_header.header_lbl["text"] = f"{cl.month_name[month]}, {year}"
+
+        # Build new calendar section
+        new_cal_section = CalendarSection(
+            self.calendar_view, self, month, year)
+
+        # Destroy old calendar section
+        self.calendar_view.calendar_section.destroy()
+
+        # Pack in new calendar section
+        self.calendar_view.calendar_section = new_cal_section
+        self.calendar_view.calendar_section.pack(
+            side=tk.TOP, fill=tk.BOTH, expand=True)
+
+        # Update month and year for CalendarView
+        self.calendar_view.month = month
+        self.calendar_view.year = year
 
     def next_month(self, event):
-        pass
+        month = self.calendar_view.month + 1
+        year = self.calendar_view.year
+
+        if month > 12:
+            month = 1
+            year = year + 1
+
+        # Update calendar header
+        self.calendar_view.main_header.header_lbl["text"] = f"{cl.month_name[month]}, {year}"
+
+        # Build new calendar section
+        new_cal_section = CalendarSection(
+            self.calendar_view, self, month, year)
+
+        # Destroy old calendar section
+        self.calendar_view.calendar_section.destroy()
+
+        # Pack in new calendar section
+        self.calendar_view.calendar_section = new_cal_section
+        self.calendar_view.calendar_section.pack(
+            side=tk.TOP, fill=tk.BOTH, expand=True)
+
+        # Update month and year for CalendarView
+        self.calendar_view.month = month
+        self.calendar_view.year = year
 
     def enter_entries_view(self, event):
         pass
