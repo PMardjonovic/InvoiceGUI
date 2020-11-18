@@ -6,6 +6,8 @@ from views.calendar_view.calendar_view import CalendarView
 from views.calendar_view.calendar_section import CalendarSection
 from views.entries_view.entries_view import EntriesView
 
+from models.entry import Entry
+
 
 class InvoiceApp(tk.Frame):
     def __init__(self, root, *args, **kwargs):
@@ -17,6 +19,10 @@ class InvoiceApp(tk.Frame):
 
         self.month = self.today.month
         self.year = self.today.year
+
+        self.current_block = None
+
+        self.entries = {}
 
         # CalendarView displaying todays date
         self.calendar_view = CalendarView(
@@ -74,14 +80,26 @@ class InvoiceApp(tk.Frame):
         self.calendar_view.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
     def new_entry(self, event):
-        pass
+        self.entries_view.entries_list.entries_lst.insert(
+            '', 'end', text="1", values=("2020-11-17", "Labor", 8, 25))
 
     def delete_entry(self, event):
-        pass
+        item = self.entries_view.entries_list.entries_lst.selection()
+        try:
+            self.entries_view.entries_list.entries_lst.delete(item)
+        except:
+            print("Nothin to delete here!!")
 
     def enter_entries_view(self, event):
+
+        block_id = event.widget.block_id
+        self.current_block = block_id
+
         # Create entries view
-        self.entries_view = EntriesView(self, self)
+        try:
+            self.entries_view = EntriesView(self, self, self.entries[block_id])
+        except KeyError:
+            self.entries_view = EntriesView(self, self, [])
 
         # Destroy current calendar view
         self.calendar_view.destroy()
@@ -92,6 +110,18 @@ class InvoiceApp(tk.Frame):
             side=tk.TOP, fill=tk.BOTH, expand=True)
 
     def return_to_calendar(self, event):
+
+        entries = []
+
+        # Save entries from the view
+        for child in self.entries_view.entries_list.entries_lst.get_children():
+            entries.append(
+                self.entries_view.entries_list.entries_lst.item(child)["values"])
+
+        # Store them inside corresponding dict key
+        self.entries[self.current_block] = entries
+
+        self.current_block = None
         # Create calendar view
         self.calendar_view = CalendarView(
             self, self, self.today, self.month, self.year)
